@@ -1,0 +1,29 @@
+{
+  "name": "slaver/untappd-tools",
+  "description": "Untappd tools for WordPress",
+  "keywords": ["wordpress", "plugin", "untappd-tools", "untappd"],
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Viacheslav Radionov",
+      "email": "radionov@gmail.com"
+    }
+  ],  
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "gregavola/untappdphp",
+        "version": "1.0",
+        "source": {
+          "url": "https://github.com/gregavola/UntappdPHP.git",
+          "type": "git",
+          "reference": "master"
+        }
+      }
+    }
+  ],
+  "require": {
+    "gregavola/untappdphp": "^1"
+  }
+}
