@@ -69,6 +69,6 @@ class Hooks
 
     public function dev()
     {
-        //$this->cron->retail();
+        //$this->cron->ratings();
     }
 }

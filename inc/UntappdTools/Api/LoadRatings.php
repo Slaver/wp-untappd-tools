@@ -43,6 +43,7 @@ class LoadRatings extends Api
                 $i = 1;
                 foreach ($contents as $content) {
                     $brewery = trim($content->find('.name a')->text);
+					$breweryKey = mb_strtolower($brewery);
                     $beers = preg_replace('/\D/', '', $content->find('.details.brewery .abv')->text);
                     $ratings = preg_replace('/\D/', '', $content->find('.details.brewery .ibu')->text);
                     $rating = $content->find('.caps')->getAttribute('data-rating');
@@ -53,9 +54,9 @@ class LoadRatings extends Api
                         $this->log->error('Couldn\'t parse rating '.$parse_url);
                     }
 
-                    $brewery_id = NULL;
-                    if (!empty($breweries[$brewery])) {
-                        $brewery_id = (int)$breweries[$brewery]->id;
+                    $breweryId = NULL;
+                    if (!empty($breweries[$breweryKey])) {
+                        $breweryId = (int)$breweries[$breweryKey]->id;
                     } else {
                         $url = $content->find('a.label')[0]->href;
                         $type = $content->find('.beer-details .style')[1]->text;
@@ -64,48 +65,46 @@ class LoadRatings extends Api
                         }
 
                         if (!preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url)) {
-                            $url = 'https://untappd.com' . $url;
+                            $url = 'https://untappd.com'.$url;
                         }
 
-                        $breweries[$brewery] = [
+                        $breweries[$breweryKey] = [
                             'title' => $brewery,
                             'url'   => $url,
                             'type'  => array_search($type, self::BREWERY_TYPES) ?: NULL,
                             'country' => $country,
                         ];
 
-                        $brewery_id = $this->breweries->addBrewery($breweries[$brewery]);
-
-                        // TODO array to object for template
+                        $breweryId = $this->breweries->addBrewery($breweries[$breweryKey]);
                     }
 
-                    if ($brewery_id) {
-                        $brewery_yesterday = $this->breweriesRatings->getRating($brewery_id);
+                    if ($breweryId) {
+                        $brewery_yesterday = $this->breweriesRatings->getRating($breweryId);
 
                         $this->breweriesRatings->addRating([
                             'rating_place' => $i,
-                            'brewery_id' => $brewery_id,
+                            'brewery_id' => $breweryId,
                             'beers'   => $beers,
                             'ratings' => $ratings,
                             'rating'  => $rating,
                             'country' => $country,
                         ]);
 
-                        $report[$country][$brewery_id] = [
+                        $report[$country][$breweryId] = [
                             'rating_place' => $i,
-                            'brewery' => $breweries[$brewery],
+                            'brewery' => $breweries[$breweryKey],
                             'beers'   => $beers,
                             'ratings' => $ratings,
                             'rating'  => $rating,
                         ];
 
                         if (!empty($brewery_yesterday)) {
-                            $report[$country][$brewery_id]['yesterday'] = $brewery_yesterday;
+                            $report[$country][$breweryId]['yesterday'] = $brewery_yesterday;
                         }
 
                         $i++;
                     } else {
-                        $this->log->error('Rating brewery ' . $brewery . ' not found');
+                        $this->log->error('Rating brewery '.$brewery.' not found');
                     }
                 }
             } else {
@@ -114,11 +113,11 @@ class LoadRatings extends Api
         }
 
         ob_start();
-        include UT_DIR . 'templates/mails/rating.php';
+        include UT_DIR.'templates/mails/rating.php';
         $email_content = ob_get_contents();
         ob_end_clean();
         $headers = array('Content-Type: text/html; charset=UTF-8');
-        wp_mail('radionov@gmail.com', "Rating update", $email_content, $headers);
+        wp_mail(get_option('admin_email'), "Rating update", $email_content, $headers);
         $this->log->write('Breweries rating updated successfuly');
     }
 }

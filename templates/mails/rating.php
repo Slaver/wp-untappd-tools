@@ -13,38 +13,39 @@ if ($report) {
         foreach ($data as $b) {
 
             echo '<tr>';
-            echo '<td>' . $b['rating_place'] . '</td>';
+            echo '<td>'.$b['rating_place'].'</td>';
 
             echo '<td>';
             if (!empty($b['yesterday'])) {
                 if ($b['rating_place'] > $b['yesterday']['rating_place']) {
-                    echo '<span style="color: red">↓</span> -' . ($b['rating_place'] - $b['yesterday']['rating_place']);
+                    echo '<span style="color: red">↓</span> -'.($b['rating_place'] - $b['yesterday']['rating_place']);
                 }
                 if ($b['rating_place'] < $b['yesterday']['rating_place']) {
-                    echo '<span style="color: green">↑</span>' . ($b['yesterday']['rating_place'] - $b['rating_place']);
+                    echo '<span style="color: green">↑</span>'.($b['yesterday']['rating_place'] - $b['rating_place']);
                 }
             } else {
                 echo '<strong style="color: orange">NEW!</strong>';
             }
             echo '</td>';
 
-            echo '<td><a href="' . $b['brewery']->url . '">' . $b['brewery']->title . '</a></td>';
+            echo '<td><a href="'.$b['brewery']->url.'">'.$b['brewery']->title.'</a></td>';
 
-            echo '<td>' . round($b['rating'], 3) . '</td>';
+            echo '<td>'.round($b['rating'], 3).'</td>';
             echo '<td>';
 
             if (!empty($b['yesterday'])) {
-                if (round($b['rating'], 3) > round($b['yesterday']['rating'], 3) && round($b['rating'] - $b['yesterday']['rating'], 3) > 0) {
-                    echo ' <span style="color: red">↓</span> -' . round($b['yesterday']['rating'] - $b['rating'], 3);
+                $diff = round($b['rating'] - $b['yesterday']['rating'], 4);
+                if ($b['rating'] > $b['yesterday']['rating'] && $diff > 0.001) {
+                    echo ' <span style="color: green">↑</span> '.round($b['rating'] - $b['yesterday']['rating'], 3);
                 }
-                if (round($b['rating'], 3) < round($b['yesterday']['rating'], 3) && round($b['yesterday']['rating'] - $b['rating'], 3) > 0) {
-                    echo ' <span style="color: green">↑</span>' . round($b['rating'] - $b['yesterday']['rating'], 3);
+                if ($b['rating'] < $b['yesterday']['rating'] && $diff > 0.001) {
+                    echo ' <span style="color: red">↓</span> -'.round($b['yesterday']['rating'] - $b['rating'], 3);
                 }
             }
             echo '</td>';
 
-            echo '<td>' . $b['beers'] . '</td>';
-            echo '<td>' . $b['ratings'] . '</td>';
+            echo '<td>'.$b['beers'].'</td>';
+            echo '<td>'.$b['ratings'].'</td>';
             echo '</tr>';
 
         }

@@ -76,6 +76,6 @@ class Admin
             }
         }
 
-        include UT_DIR . 'templates/admin.php';
+        include UT_DIR.'templates/admin.php';
     }
 }

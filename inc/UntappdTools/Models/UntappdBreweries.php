@@ -16,7 +16,7 @@ class UntappdBreweries extends Models
 
     public function getBreweries(): ?array
     {
-        return $this->wpdb->get_results("SELECT title, id, url FROM $this->table", OBJECT_K);
+        return $this->wpdb->get_results("SELECT LOWER(title) as title_key, title, id, url FROM $this->table", OBJECT_K);
     }
 
     public function addBrewery(array $data = []): int

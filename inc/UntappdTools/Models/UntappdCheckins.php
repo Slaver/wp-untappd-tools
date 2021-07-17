@@ -13,14 +13,14 @@ class UntappdCheckins extends Models
     public function __construct() {
         parent::__construct();
 
-        $this->table = $this->wpdb->prefix . 'untappd_checkins';
-        $this->tableVenues = $this->wpdb->prefix . 'untappd_venues';
+        $this->table = $this->wpdb->prefix.'untappd_checkins';
+        $this->tableVenues = $this->wpdb->prefix.'untappd_venues';
     }
 
     public function totalCheckins(int $days = 0): ?string
     {
         $and = ($days) ? $this->wpdb->prepare(" WHERE checkin_time BETWEEN NOW() - INTERVAL %d DAY AND NOW()", $days) : '';
-        return $this->wpdb->get_var("SELECT count(id) from $this->table" . $and);
+        return $this->wpdb->get_var("SELECT count(id) from $this->table".$and);
     }
 
     public function totalRatings(int $days = 0, int $minRating = 0): ?string
