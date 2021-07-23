@@ -43,7 +43,7 @@ class LoadRatings extends Api
                 $i = 1;
                 foreach ($contents as $content) {
                     $brewery = trim($content->find('.name a')->text);
-					$breweryKey = mb_strtolower($brewery);
+                    $breweryKey = mb_strtolower($brewery);
                     $beers = preg_replace('/\D/', '', $content->find('.details.brewery .abv')->text);
                     $ratings = preg_replace('/\D/', '', $content->find('.details.brewery .ibu')->text);
                     $rating = $content->find('.caps')->getAttribute('data-rating');

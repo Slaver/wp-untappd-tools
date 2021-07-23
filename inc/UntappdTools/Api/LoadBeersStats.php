@@ -43,7 +43,7 @@ class LoadBeersStats extends Api
 
                     $intervalLatestCheckin = $dateNow->diff($dateLatestCheckin);
                     if ($intervalLatestCheckin->days > 360) {
-                        if ($dateNow > $dateLatestUpdate->modify('+90 days')) {
+                        if ($dateNow > $dateLatestUpdate->modify('+30 days')) {
                             $beerNeedUpdate = true;
                         }
                     } elseif ($intervalLatestCheckin->days > 30) {
