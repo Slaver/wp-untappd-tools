@@ -53,7 +53,7 @@ class Admin
         $placesPopularPurchased = $checkins->getPopularPurchasedVenues();
         $placesPopularPurchasedDays30 = $checkins->getPopularPurchasedVenues(30);
         $placesLoyal = $checkins->getLoyalVenues();
-        $placesLoyalDays30 = $checkins->getLoyalVenues(30);
+        $placesLoyalDays30 = $checkins->getLoyalVenues(30, 20, 10);
 
         foreach ($places as $place) {
             if (!empty($placesPopular[$place->venue_id])) {

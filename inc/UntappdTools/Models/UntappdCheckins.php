@@ -106,7 +106,7 @@ class UntappdCheckins extends Models
         return $return;
     }
 
-    public function getLoyalVenues(int $days = 0, int $limit = 20, int $minRating = 5): ?array
+    public function getLoyalVenues(int $days = 0, int $limit = 20, int $minRating = 50): ?array
     {
         $return = [];
         $and = ( $days ) ? $this->wpdb->prepare(" AND checkin_time BETWEEN NOW() - INTERVAL %d DAY AND NOW()", $days) : '';
