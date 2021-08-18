@@ -12,12 +12,11 @@ class Hooks
 
     /**
      * Run WordPress filters and actions
-     *
-     * @param array $options
      */
-    public function __construct(array $options)
+    public function __construct()
     {
-        $this->cron = new Cron($options);
+        $options = new Helpers\Options();
+        $this->cron = new Cron($options->load());
 
         add_action('admin_menu', [$this, 'menu']);
 
@@ -69,6 +68,6 @@ class Hooks
 
     public function dev()
     {
-        //$this->cron->ratings();
+        $this->cron->ratings();
     }
 }

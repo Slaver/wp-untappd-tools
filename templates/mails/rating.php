@@ -28,7 +28,7 @@ if ($report) {
             }
             echo '</td>';
 
-            echo '<td><a href="'.$b['brewery']->url.'">'.$b['brewery']->title.'</a></td>';
+            echo '<td><a href="'.$b['brewery']['url'].'">'.$b['brewery']['title'].'</a></td>';
 
             echo '<td>'.round($b['rating'], 3).'</td>';
             echo '<td>';

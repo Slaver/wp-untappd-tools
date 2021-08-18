@@ -25,7 +25,7 @@ class LoadRatings extends Api
         4 => 'Brew Pub',
         8 => 'Cidery',
         9 => 'Meadery',
-        10 => 'Contract Brewery', // Contractbrouwerij
+        10 => 'Contract Brewery',
         11 => 'Regional Brewery',
     ];
 
@@ -56,12 +56,17 @@ class LoadRatings extends Api
 
                     $breweryId = NULL;
                     if (!empty($breweries[$breweryKey])) {
-                        $breweryId = (int)$breweries[$breweryKey]->id;
+                        $breweryId = (int)$breweries[$breweryKey]['id'];
                     } else {
                         $url = $content->find('a.label')[0]->href;
                         $type = $content->find('.beer-details .style')[1]->text;
-                        if ($type == 'Contractbrouwerij') {
+
+                        // If Untappd returns list not in English
+                        if (in_array($type, ['Contractbrouwerij', 'Контрактная пивоварня'])) {
                             $type = 'Contract Brewery';
+                        }
+                        if (in_array($type, ['Медоварня'])) {
+                            $type = 'Meadery';
                         }
 
                         if (!preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url)) {
