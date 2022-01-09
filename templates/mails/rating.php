@@ -1,5 +1,7 @@
-<html>
-<head></head>
+<html lang="en">
+<head>
+    <title>Breweries' Rating</title>
+</head>
 <body>
 <?php
 if ($report) {
@@ -35,11 +37,11 @@ if ($report) {
 
             if (!empty($b['yesterday'])) {
                 $diff = round($b['rating'] - $b['yesterday']['rating'], 4);
-                if ($b['rating'] > $b['yesterday']['rating'] && $diff > 0.001) {
-                    echo ' <span style="color: green">↑</span> '.round($b['rating'] - $b['yesterday']['rating'], 3);
+                if ($b['rating'] > $b['yesterday']['rating'] && $diff > 0.0001) {
+                    echo ' <span style="color: green">↑</span> '.round($b['rating'] - $b['yesterday']['rating'], 4);
                 }
-                if ($b['rating'] < $b['yesterday']['rating'] && $diff > 0.001) {
-                    echo ' <span style="color: red">↓</span> -'.round($b['yesterday']['rating'] - $b['rating'], 3);
+                if ($b['rating'] < $b['yesterday']['rating'] && $diff > 0.0001) {
+                    echo ' <span style="color: red">↓</span> -'.round($b['yesterday']['rating'] - $b['rating'], 4);
                 }
             }
             echo '</td>';

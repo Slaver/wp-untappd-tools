@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace UntappdTools\Api;
 
+use DateTime;
+use Exception;
 use UntappdPHP;
 use UntappdTools\Api;
 
@@ -18,14 +20,15 @@ class LoadBeersStats extends Api
             $this->options['client_secret'], ''
         );
 
-        $dateNow = new \DateTime();
+        $dateNow = new DateTime();
 
         foreach ($beers as $untappdBeerId => $postId) {
-            $beerLatestCheckinDate = $beerLatestUpdate = false;
+            $beerLatestCheckinDate = $beerLatestUpdate = $beerAvailable = false;
             if ($beer = $this->beers->getBeerByUntappdId($untappdBeerId)) {
                 $beerId = (int)$beer->id;
                 $beerLatestUpdate = $beer->latest_update;
                 $beerLatestCheckinDate = $beer->latest_checkin_date;
+                $beerAvailable = (bool)get_post_meta($postId, CheckRetail::POST_META_AVAILABLE_FIELD, TRUE);
             } else {
                 $beerId = $this->beers->addBeer([
                     'post_id' => $postId,
@@ -34,12 +37,12 @@ class LoadBeersStats extends Api
             }
 
             $beerNeedUpdate = false;
-            if (!$beerLatestCheckinDate || !$beerLatestUpdate) {
+            if ($beerAvailable || !$beerLatestCheckinDate || !$beerLatestUpdate) {
                 $beerNeedUpdate = true;
             } else {
                 try {
-                    $dateLatestCheckin = new \DateTime($beerLatestCheckinDate);
-                    $dateLatestUpdate = new \DateTime($beerLatestUpdate);
+                    $dateLatestCheckin = new DateTime($beerLatestCheckinDate);
+                    $dateLatestUpdate = new DateTime($beerLatestUpdate);
 
                     $intervalLatestCheckin = $dateNow->diff($dateLatestCheckin);
                     if ($intervalLatestCheckin->days > 360) {
@@ -53,14 +56,14 @@ class LoadBeersStats extends Api
                     } else {
                         $beerNeedUpdate = true;
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->log->error('Couldn\'t convert date at beer stats update');
                 }
             }
 
             if ($beerNeedUpdate) {
                 $beerUpdateData = [];
-                $data = $untappd->get("/beer/info/".$untappdBeerId);
+                $data = $untappd->get('/beer/info/'.$untappdBeerId);
 
                 if (!empty($data->response->beer)) {
                     $this->beersRating->addRating([
@@ -75,9 +78,9 @@ class LoadBeersStats extends Api
 
                     if (!empty($data->response->beer->checkins->items[0])) {
                         try {
-                            $date = new \DateTime($data->response->beer->checkins->items[0]->created_at);
+                            $date = new DateTime($data->response->beer->checkins->items[0]->created_at);
                             $beerUpdateData['latest_checkin_date'] = $date->format('Y-m-d H:i:s');
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             $this->log->error('Couldn\'t convert date '.$data->response->beer->checkins->items[0]->created_at.' at beer stats '.$untappdBeerId);
                         }
                     }
