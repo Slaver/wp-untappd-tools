@@ -68,6 +68,9 @@ class LoadRatings extends Api
                         if (in_array($type, ['Медоварня'])) {
                             $type = 'Meadery';
                         }
+                        if (in_array($type, ['Микропивоварня'])) {
+                            $type = 'Micro Brewery';
+                        }
 
                         if (!preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url)) {
                             $url = 'https://untappd.com'.$url;
