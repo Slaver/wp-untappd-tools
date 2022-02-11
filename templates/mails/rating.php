@@ -36,7 +36,7 @@ if ($report) {
             echo '<td>';
 
             if (!empty($b['yesterday'])) {
-                $diff = round($b['rating'] - $b['yesterday']['rating'], 4);
+                $diff = abs(round($b['rating'] - $b['yesterday']['rating'], 4));
                 if ($b['rating'] > $b['yesterday']['rating'] && $diff > 0.0001) {
                     echo ' <span style="color: green">↑</span> '.round($b['rating'] - $b['yesterday']['rating'], 4);
                 }

@@ -5,7 +5,7 @@ Text Domain: untappd-tools
 Description: Untappd tools for WordPress
 Author: Viacheslav Radionov
 Author URI: https://rdnv.me
-Version: 3.2.1
+Version: 3.2.2
 */
 
 // Exit
